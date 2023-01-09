@@ -1,0 +1,111 @@
+﻿@model List<JobPosting>
+
+
+@{
+    ViewData["Title"] = "Job Übersicht";
+}
+
+<div class="jombotron bg-primary">
+    <div class="display-1 text-white text-center" >
+        Worktastic
+    </div>
+</div>
+  <h4 class="text-center mt-3">
+      Finde einen Traumjob in deiner Nähe!
+  </h4>
+<div class=" mt-4">
+    <div class="col">
+        <input id="inputQuery" class="form-control-lg form-control" type="text" placeholder="Wonach suchst du" />
+    </div>         
+ </div>
+<div class="mt-2 text-center">    
+        <button onclick="onClickSearch()" class="btn btn-lg btn-primary">Suchen</button>  
+</div>
+
+<hr />
+
+<div id="partialList">
+
+</div>
+@*<div class="list-group mt-4">
+    @{
+        foreach (JobPosting jobPosting in Model)
+        {
+            <a href="#" onclick="showModal(@jobPosting.Id)" class="list-group-item list-group-item-action  flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@jobPosting.JobTitle</h5>
+                    <small>@jobPosting.JobLocation</small>
+                </div>
+                <p class="mb-1">@jobPosting.CompanyName</p>
+                <small>Start: @jobPosting.StartDate.ToShortDateString()</small>
+            </a>
+        }
+    }
+
+</div>*@
+
+<!-- Modal -->
+<div class="modal fade" id="modalJobPosting" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+            <img id="modalImage" class="img-fluid" src="" />
+
+                <div id="modalDescriotion" class="mt-2">
+               
+               </div>
+               <hr />
+                <div id="modalSalary">
+               
+               </div>
+                <div id="modalContact">
+                </div>
+            </div>           
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $('#partialList').load("/home/GetJobPostingsPartial/"); 
+
+    function onClickSearch(){
+        var query = $('#inputQuery').val();
+            
+        $('#partialList').load("/home/GetJobPostingsPartial?query=" + query);           
+
+    }
+    
+    function showModal(id){
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetJobPosting")",
+                data: { id: id },
+                success: function (data) {
+                    debugger;
+                  //$('#modalImage').attr('src',`data:image/png;base64,${yourByteArrayAsBase64}`);
+                  $('#modalImage').attr('src',`data:image/png;base64,${data.companyImage}`);
+
+                    //base64- ein byteArray ein Bild kriegt--yourByteArrayAsBase64
+                  
+                  
+                  $('#modalTitle').text(data.jobTitle);
+                  $('#modalDescriotion').text(data.descriotion);
+                  $('#modalContact').text("Kontact:   " + data.contactMail);
+                  $('#modalSalary').text("Jahresgehalt:   " + data.salary + " Euro");
+
+
+                  $('#modalJobPosting').modal('show')
+                }
+            });           
+    }
+    </script>
+}
