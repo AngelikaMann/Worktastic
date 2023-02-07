@@ -53,21 +53,13 @@ namespace Worktastic.Controllers
         [HttpGet]
         public IActionResult GetJobPostingsPartial(string query)
         {
-
-
             List<JobPosting> jobPostings = new List<JobPosting>();
-
-
             if (string.IsNullOrWhiteSpace(query))
-
                 jobPostings = _context.JobPostings.ToList();
             else
                 jobPostings = _context.JobPostings
                     .Where(x => x.JobTitle.ToLower()
                     .Contains(query.ToLower())).ToList();
-
-
-
             return PartialView("_JobPostingListPartial", jobPostings);
         }
     }

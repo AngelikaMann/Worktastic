@@ -22,7 +22,6 @@ namespace Worktastic.Controllers
         public IActionResult GetAll()
         {
             var allJobPosting = _context.JobPostings.ToArray();
-
             return Ok(allJobPosting);
         }
         [ApiKeyAuthorization]
@@ -33,7 +32,6 @@ namespace Worktastic.Controllers
 
             if (jobPosting == null)
                 return NotFound();
-
             return Ok(jobPosting);
         }
 
@@ -44,7 +42,6 @@ namespace Worktastic.Controllers
                 return BadRequest();
             _context.JobPostings.Add(jobposting);
             _context.SaveChanges();
-
             return Ok();
         }
 
@@ -54,24 +51,19 @@ namespace Worktastic.Controllers
         public IActionResult Delete(int id)
         {
             var jobPosting = _context.JobPostings.SingleOrDefault(p => p.Id == id);
-
             if (jobPosting == null)
                 return NotFound();
             _context.JobPostings.Remove(jobPosting);
             _context.SaveChanges();
             return Ok("Objekt wurde gelöscht.");
-
         }
 
         [HttpPut("Update")]
 
         public IActionResult Update(JobPosting jobPosting)
         {
-
-
             if (jobPosting.Id == 0)
                 return BadRequest("Has no Value Id.");
-
             _context.JobPostings.Update(jobPosting);
             _context.SaveChanges();
             return Ok("Objekt geändert und gespeichert!");

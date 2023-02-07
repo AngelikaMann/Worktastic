@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 
 namespace Worktastic.Filters
 {
@@ -14,12 +14,11 @@ namespace Worktastic.Filters
         {
 
             //Check api auth
-            if(context.HttpContext.Request.Headers.TryGetValue("ApiKey", out var key))
+            if (context.HttpContext.Request.Headers.TryGetValue("ApiKey", out var key))
             {
                 var config = context.HttpContext.RequestServices.GetRequiredService<IConfiguration>();
                 var configApiKey = config.GetValue<string>("ApiKey");
-
-                if (key.Equals(configApiKey)==false)
+                if (key.Equals(configApiKey) == false)
                 {
                     context.Result = new UnauthorizedResult();
                     return;
@@ -30,8 +29,6 @@ namespace Worktastic.Filters
                 context.Result = new UnauthorizedResult();
                 return;
             }
-
-
             await next();
         }
     }
